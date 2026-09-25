@@ -50,3 +50,7 @@ database
 Таблица "users" успешно удалена.
 
 ```
+
+Запись установки и работы с базой данных:
+
+[![asciicast](https://asciinema.org/a/EtqGGGlnxdNjW7SU.svg)](https://asciinema.org/a/EtqGGGlnxdNjW7SU)
