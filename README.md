@@ -54,3 +54,39 @@ database
 Запись установки и работы с базой данных:
 
 [![asciicast](https://asciinema.org/a/EtqGGGlnxdNjW7SU.svg)](https://asciinema.org/a/EtqGGGlnxdNjW7SU)
+
+CRUD-операции
+
+Данные каждой таблицы хранятся в отдельном JSON-файле в директории `data/`.
+
+Добавление записи
+```sql
+insert into users values ("Sergei", 28, true)
+```
+
+> **Примечание:** Поле `ID` указывать не нужно - оно генерируется автоматически.
+
+Чтение всех записей
+```sql
+select from users
+```
+Чтение по условию
+```sql
+select from users where age = 28
+```
+Для строковых значений используются кавычки:
+```sql
+select from users where name = "Sergei"
+```
+Обновление
+```sql
+update users set age = 29 where name = "Sergei"
+```
+Удаление
+```sql
+delete from users where ID = 1
+```
+Информация о таблице
+```text
+info users
+```

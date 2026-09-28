@@ -3,3 +3,5 @@ dist/
 __pycache__/
 *.pyc
 *.cast
+db_meta.json
+data/*.json

@@ -78,3 +78,132 @@ def list_tables(metadata):
         return
     for table_name in metadata:
         print(f"- {table_name}")
+
+
+def is_valid_type(value, expected_type):
+    """Проверяет соответствие Python-значения типу столбца (int, str, bool)"""
+    if expected_type == "int":
+        return type(value) is int
+    if expected_type == "str":
+        return type(value) is str
+    if expected_type == "bool":
+        return type(value) is bool
+    return False
+
+
+def get_column_type(metadata, table_name, column_name):
+    """Возвращает тип столбца таблицы"""
+    columns = metadata[table_name]["columns"]
+    for column in columns:
+        if column["name"] == column_name:
+            return column["type"]
+    return None
+
+
+def validate_clause(metadata, table_name, clause):
+    """Проверяет столбец и тип значения условия"""
+    if table_name not in metadata:
+        print(f'Ошибка: Таблица "{table_name}" не существует')
+        return False
+    column_name, value = next(iter(clause.items()))
+    column_type = get_column_type(metadata, table_name, column_name,)
+    if column_type is None:
+        print(
+              f'Ошибка: Столбец "{column_name}" '
+              f'не существует в таблице "{table_name}"'
+             )
+        return False
+    if not is_valid_type(value, column_type):
+        print(
+              f'Ошибка: Значение столбца "{column_name}" '
+              f"должно иметь тип {column_type}"
+             )
+        return False
+    return True
+
+
+def insert(metadata, table_name, values, table_data = None):
+    """Добавляет новую запись в таблицу"""
+
+    if table_name not in metadata:
+        print(f'Ошибка: Таблица "{table_name}" не существует')
+        return None
+
+    if table_data is None:
+        table_data = []
+
+    columns = metadata[table_name]["columns"]
+    user_columns = [column for column in columns
+                    if column["name"] != "ID"
+                    ]
+    if len(values) != len(user_columns):
+        print(
+              "Ошибка: Количество значений не соответствует "
+              "количеству столбцов."
+              )
+        return None
+
+    for column, value in zip(user_columns, values):
+        expected_type = column["type"]
+        if not is_valid_type(value, expected_type):
+            print(
+                  f'Ошибка: Значение для столбца "{column["name"]}" '
+                  f" должно иметь тип {expected_type}"
+                 )
+            return None
+
+    if table_data:
+        new_id = max(row["ID"] for row in table_data) + 1
+    else:
+        new_id = 1
+
+    new_row = {"ID": new_id}
+
+    for column, value in zip(user_columns, values):
+        new_row[column["name"]] = value
+
+    updated_data = table_data.copy()
+    updated_data.append(new_row)
+
+    print(
+          f'Запись с ID={new_id} успешно добавлена '
+          f'в таблицу "{table_name}"'
+         )
+    return updated_data
+
+
+def select(table_data, where_clause = None):
+    """Возвращает все записи или записи по условию"""
+    if where_clause is None:
+        return table_data
+    column_name, expected_value = next(iter(where_clause.items()))
+    return [row for row in table_data
+            if row.get(column_name) == expected_value
+            ]
+
+
+def update(table_data, set_clause, where_clause):
+    """Обновляет записи по условию"""
+    where_column, where_value = next(iter(where_clause.items()))
+    updated_data = [row.copy() for row in table_data]
+    updated_ids = []
+
+    for row in updated_data:
+        if row.get(where_column) == where_value:
+            for column_name, new_value in set_clause.items():
+                row[column_name] = new_value
+            updated_ids.append(row["ID"])
+
+    return updated_data, updated_ids
+
+
+def delete(table_data, where_clause):
+    """Удаляет записи по условию"""
+    column_name, expected_value = next(iter(where_clause.items()))
+    deleted_ids = [row["ID"] for row in table_data
+                   if row.get(column_name) == expected_value
+                   ]
+    updated_data = [row for row in table_data
+                    if row.get(column_name) != expected_value
+                    ]
+    return updated_data, deleted_ids
