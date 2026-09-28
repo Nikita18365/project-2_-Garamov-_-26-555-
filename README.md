@@ -90,3 +90,6 @@ delete from users where ID = 1
 ```text
 info users
 ```
+### Демонстрация CRUD-операций
+
+[![asciicast](https://asciinema.org/a/6CmgFQEGJs2phFU0.svg)](https://asciinema.org/a/6CmgFQEGJs2phFU0)
