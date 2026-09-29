@@ -124,3 +124,7 @@ info users
 ## Кэширование
 
 Для повторяющихся запросов `select` используется кэш, реализованный с помощью замыкания `create_cacher()`.
+
+### Демонстрация декораторов и замыканий
+
+[![asciicast](https://asciinema.org/a/uNizV7vkgRhlJH0a.svg)](https://asciinema.org/a/uNizV7vkgRhlJH0a)
