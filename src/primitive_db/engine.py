@@ -132,7 +132,8 @@ def run():
                                                 table_name,
                                                 columns
                                                 )
-
+                if updated_metadata is None:
+                    continue
                 if updated_metadata != metadata:
                     save_metadata(METADATA_FILE,
                                   updated_metadata
@@ -148,7 +149,9 @@ def run():
                 updated_metadata = drop_table(metadata,
                                               table_name
                                               )
-
+                # Теперь у нас будет обработчик соглашений (y/n)
+                if updated_metadata is None:
+                    continue
                 if updated_metadata != metadata:
                     save_metadata(METADATA_FILE, updated_metadata)
                     delete_table_data(table_name)
@@ -194,6 +197,9 @@ def run():
                 table_data = load_table_data(table_name)
 
                 rows = select(table_data, where_clause)
+                # На случай если handle_db_errors поймает исключение
+                if rows is None:
+                    continue
                 print_table(metadata,
                             table_name,
                             rows
@@ -219,10 +225,15 @@ def run():
 
                 table_data = load_table_data(table_name)
 
-                updated_data, updated_ids = update(table_data,
-                                                   set_clause,
-                                                   where_clause
-                                                   )
+                update_result = update(table_data,
+                                       set_clause,
+                                       where_clause
+                                      )
+
+                if update_result is None:
+                    continue
+
+                updated_data, updated_ids = update_result
 
                 save_table_data(table_name, updated_data)
 
@@ -247,9 +258,14 @@ def run():
 
                 table_data = load_table_data(table_name)
 
-                updated_data, deleted_ids = delete(table_data,
-                                                   where_clause
-                                                   )
+                delete_result = delete(table_data,
+                                       where_clause
+                                      )
+
+                if delete_result is None:
+                    continue
+
+                updated_data, deleted_ids = delete_result
 
                 save_table_data(table_name,
                                 updated_data
