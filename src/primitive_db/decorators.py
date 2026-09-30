@@ -1,10 +1,8 @@
 import time
-from functools import wraps
 
 
 def handle_db_errors(func):
     """Централизованно обрабатывает ошибки операций базы данных через try-except"""
-    @wraps(func)
     def wrapper(*args, **kwargs):
         try:
             return func(*args, **kwargs)
@@ -29,7 +27,6 @@ def handle_db_errors(func):
 def confirm_action(action_name):
     """Функция запрашивает подтверждение перед опасной операцией"""
     def decorator(func):
-        @wraps(func)
         def wrapper(*args, **kwargs):
             answer = input(f'Вы уверены, что хотите выполнить '
                            f'"{action_name}"? [y/n]: '
@@ -46,7 +43,6 @@ def confirm_action(action_name):
 # Без него log_time, отладка и документация могли бы вместо insert видеть имя wrapper
 def log_time(func):
     """Измеряет время выполнения функции"""
-    @wraps(func)
     def wrapper(*args, **kwargs):
         start_time = time.monotonic()
         try:

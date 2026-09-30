@@ -1,5 +1,4 @@
 import json
-import re
 
 
 def parse_value(value_text):
@@ -25,68 +24,112 @@ def parse_condition(condition_text):
 
 def parse_insert(user_input):
     """Разбирает команду insert"""
-    pattern = (r"^insert\s+into\s+(\w+)\s+"
-               r"values\s*\((.*)\)\s*$"
-              )
-    match = re.match(pattern, user_input, flags = re.IGNORECASE)
-    if not match:
+    prefix = "insert into "
+    command = user_input.strip()
+    if not command.lower().startswith(prefix):
         raise ValueError("Некорректный синтаксис insert")
-    table_name = match.group(1)
-    values_text = match.group(2)
+    remainder = command[len(prefix):]
+    marker = " values "
+    marker_position = remainder.lower().find(marker)
+    if marker_position == -1:
+        raise ValueError("Некорректный синтаксис insert")
+    table_name = remainder[:marker_position].strip()
+    values_part = remainder[marker_position + len(marker):].strip()
+    if (not table_name
+        or not values_part.startswith("(")
+        or not values_part.endswith(")")
+       ):
+        raise ValueError("Некорректный синтаксис insert")
+    values_text = values_part[1:-1]
     try:
         values = json.loads(f"[{values_text}]")
     except json.JSONDecodeError as error:
-        raise ValueError("Некорректные значения команды insert") from error
+        raise ValueError("Некорректные значения команды insert.") from error
     return table_name, values
 
 
 def parse_select(user_input):
     """Разбирает команду select"""
-    pattern = (r"^select\s+from\s+(\w+)"
-               r"(?:\s+where\s+(.+))?\s*$"
-              )
-    match = re.match(pattern, user_input, flags = re.IGNORECASE)
-    if not match:
+    prefix = "select from "
+    command = user_input.strip()
+    if not command.lower().startswith(prefix):
         raise ValueError("Некорректный синтаксис select")
-    table_name = match.group(1)
-    where_text = match.group(2)
-    where_clause = None
-    if where_text:
-        where_clause = parse_condition(where_text)
+    remainder = command[len(prefix):].strip()
+    if not remainder:
+        raise ValueError("Некорректный синтаксис select")
+    marker = " where "
+    marker_position = remainder.lower().find(marker)
+    if marker_position == -1:
+        table_name = remainder.strip()
+        if not table_name:
+            raise ValueError("Некорректный синтаксис select")
+        return table_name, None
+    table_name = remainder[:marker_position].strip()
+    condition_text = remainder[marker_position + len(marker):].strip()
+    if not table_name or not condition_text:
+        raise ValueError("Некорректный синтаксис select")
+    where_clause = parse_condition(condition_text)
     return table_name, where_clause
 
 
 def parse_update(user_input):
     """Разбирает команду update"""
-    pattern = (r"^update\s+(\w+)\s+set\s+(.+?)"
-               r"\s+where\s+(.+)\s*$"
-              )
-    match = re.match(pattern, user_input, flags = re.IGNORECASE)
-    if not match:
+    prefix = "update "
+    command = user_input.strip()
+    if not command.lower().startswith(prefix):
         raise ValueError("Некорректный синтаксис update")
-    table_name = match.group(1)
-    set_clause = parse_condition(match.group(2))
-    where_clause = parse_condition(match.group(3))
+    remainder = command[len(prefix):].strip()
+    set_marker = " set "
+    set_position = remainder.lower().find(set_marker)
+    if set_position == -1:
+        raise ValueError("Некорректный синтаксис update")
+    table_name = remainder[:set_position].strip()
+    after_set = remainder[set_position + len(set_marker):].strip()
+    where_marker = " where "
+    where_position = after_set.lower().find(where_marker)
+    if where_position == -1:
+        raise ValueError("Некорректный синтаксис update")
+    set_text = after_set[:where_position].strip()
+    where_text = after_set[where_position + len(where_marker):].strip()
+    if (not table_name
+        or not set_text
+        or not where_text
+       ):
+        raise ValueError("Некорректный синтаксис update")
+    set_clause = parse_condition(set_text)
+    where_clause = parse_condition(where_text)
     return table_name, set_clause, where_clause
+
 
 
 def parse_delete(user_input):
     """Разбирает команду delete"""
-    pattern = (r"^delete\s+from\s+(\w+)"
-               r"\s+where\s+(.+)\s*$"
-              )
-    match = re.match(pattern, user_input, flags = re.IGNORECASE)
-    if not match:
+    prefix = "delete from "
+    command = user_input.strip()
+    if not command.lower().startswith(prefix):
         raise ValueError("Некорректный синтаксис delete")
-    table_name = match.group(1)
-    where_clause = parse_condition(match.group(2))
+    remainder = command[len(prefix):].strip()
+    where_marker = " where "
+    where_position = remainder.lower().find(where_marker)
+    if where_position == -1:
+        raise ValueError("Некорректный синтаксис delete")
+    table_name = remainder[:where_position].strip()
+    where_text = remainder[where_position + len(where_marker):].strip()
+    if not table_name or not where_text:
+        raise ValueError("Некорректный синтаксис delete")
+    where_clause = parse_condition(where_text)
     return table_name, where_clause
 
 
 def parse_info(user_input):
     """Разбирает команду info"""
-    pattern = r"^info\s+(\w+)\s*$"
-    match = re.match(pattern, user_input, flags = re.IGNORECASE)
-    if not match:
+    prefix = "info "
+    command = user_input.strip()
+    if not command.lower().startswith(prefix):
         raise ValueError("Некорректный синтаксис info")
-    return match.group(1)
+    table_name = command[len(prefix):].strip()
+    if not table_name:
+        raise ValueError("Некорректный синтаксис info")
+    if " " in table_name:
+        raise ValueError("Некорректный синтаксис info")
+    return table_name

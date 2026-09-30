@@ -3,6 +3,7 @@ import shlex
 import prompt
 from prettytable import PrettyTable
 
+from src.primitive_db.constants import META_FILE
 from src.primitive_db.core import (
     create_table,
     delete,
@@ -27,8 +28,6 @@ from src.primitive_db.utils import (
     save_metadata,
     save_table_data,
 )
-
-METADATA_FILE = "db_meta.json"
 
 
 def print_help():
@@ -104,7 +103,7 @@ def run():
     """Запускает основной цикл базы данных"""
     print_help()
     while True:
-        metadata = load_metadata(METADATA_FILE)
+        metadata = load_metadata(META_FILE)
         user_input = prompt.string(">>>Введите команду: ")
         try:
             args = shlex.split(user_input)
@@ -135,7 +134,7 @@ def run():
                 if updated_metadata is None:
                     continue
                 if updated_metadata != metadata:
-                    save_metadata(METADATA_FILE,
+                    save_metadata(META_FILE,
                                   updated_metadata
                                   )
                     save_table_data(table_name, [])
@@ -153,7 +152,7 @@ def run():
                 if updated_metadata is None:
                     continue
                 if updated_metadata != metadata:
-                    save_metadata(METADATA_FILE, updated_metadata)
+                    save_metadata(META_FILE, updated_metadata)
                     delete_table_data(table_name)
 
             elif command == "list_tables":

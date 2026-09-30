@@ -1,11 +1,10 @@
-from src.decorators import (
-	confirm_action,
-	create_cacher,
-	handle_db_errors,
-	log_time,
+from src.primitive_db.constants import VALID_TYPES
+from src.primitive_db.decorators import (
+    confirm_action,
+    create_cacher,
+    handle_db_errors,
+    log_time,
 )
-
-SUPPORTED_TYPES = {"int", "str", "bool"}
 
 _select_cache = create_cacher()
 
@@ -27,7 +26,7 @@ def create_table(metadata, table_name, columns):
 
 		column_name, column_type = column.split(":", 1)
 
-		if not column_name or column_type not in SUPPORTED_TYPES:
+		if not column_name or column_type not in VALID_TYPES:
 			print(f"2. Некорректное значение: {column}. Попробуйте сначала.")
 			return metadata
 
