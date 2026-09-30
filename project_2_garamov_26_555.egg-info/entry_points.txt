@@ -1,3 +1,0 @@
-[console_scripts]
-database = src.primitive_db.main:main
-project = src.primitive_db.main:main
