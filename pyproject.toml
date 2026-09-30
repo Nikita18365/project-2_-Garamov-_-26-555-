@@ -1,27 +1,33 @@
-[tool.poetry]
+[project]
 name = "project-2-garamov-26-555"
 version = "0.1.0"
 description = "Primitive database project"
-authors = ["Nikita Garamov"]
 readme = "README.md"
-packages = [{ include = "src" }]
+authors = [
+    { name = "Nikita Garamov" }
+]
+requires-python = ">=3.12,<4.0"
+dependencies = [
+    "prompt>=0.4.1,<0.5",
+    "prettytable>=3.18.0,<4.0",
+]
 
-[tool.poetry.dependencies]
-python = "^3.12"
-prompt = "^0.4.1"
-prettytable = "^3.18.0"
-
-
-[tool.poetry.group.dev.dependencies]
-ruff = "^0.16.9"
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
-
-[tool.poetry.scripts]
+[project.scripts]
 project = "src.primitive_db.main:main"
 database = "src.primitive_db.main:main"
+
+[dependency-groups]
+dev = [
+    "ruff>=0.16.9,<0.17",
+]
+
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src", "src.*"]
 
 [tool.ruff]
 line-length = 88
