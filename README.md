@@ -484,6 +484,12 @@ handle_db_errors
 
 Это позволяет не дублировать одинаковые блоки try...except в каждой функции.
 
+
+## Демонстрация декораторов и замыканий
+
+[![asciicast](https://asciinema.org/a/uNizV7vkgRhlJH0a.svg)](https://asciinema.org/a/uNizV7vkgRhlJH0a)
+
+
 ### Подтверждение опасных операций
 
 Декоратор:
@@ -577,11 +583,6 @@ src/
 - parser.py - разбор сложных команд insert, select, update, delete, info;
 - decorators.py - обработка ошибок, подтверждение операций, измерение времени и кэширование;
 - constants.py - именованные константы проекта;
-
-
-## Демонстрация декораторов и замыканий
-
-[![asciicast](https://asciinema.org/a/uNizV7vkgRhlJH0a.svg)](https://asciinema.org/a/uNizV7vkgRhlJH0a)
 
 
 ## Проверка качества кода
