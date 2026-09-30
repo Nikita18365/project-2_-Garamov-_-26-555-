@@ -4,6 +4,7 @@ from src.primitive_db.engine import run
 
 
 def main():
+    """Запускает консольное приложение Primitive DB"""
     run()
 
 if __name__ == "__main__":

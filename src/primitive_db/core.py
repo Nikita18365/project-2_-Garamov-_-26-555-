@@ -102,6 +102,7 @@ def is_valid_type(value, expected_type):
     return False
 
 
+@handle_db_errors
 def get_column_type(metadata, table_name, column_name):
     """Возвращает тип столбца таблицы"""
     columns = metadata[table_name]["columns"]
