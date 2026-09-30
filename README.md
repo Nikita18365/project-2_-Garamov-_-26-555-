@@ -176,7 +176,7 @@ exit
 
 Запись установки и работы с базой данных:
 
-[![asciicast](https://asciinema.org/a/EtqGGGlnxdNjW7SU.svg)](https://asciinema.org/a/EtqGGGlnxdNjW7SU)
+[![asciicast](https://asciinema.org/a/InUKpG3VhHZoHVnz.svg)](https://asciinema.org/a/InUKpG3VhHZoHVnz)
 
 
 ## CRUD-операции
@@ -369,7 +369,7 @@ info users
 
 ## Демонстрация CRUD-операций
 
-[![asciicast](https://asciinema.org/a/6CmgFQEGJs2phFU0.svg)](https://asciinema.org/a/6CmgFQEGJs2phFU0)
+[![asciicast](https://asciinema.org/a/31EXE19z3k8i5aOG.svg)](https://asciinema.org/a/31EXE19z3k8i5aOG)
 
 
 ## Валидация данных
@@ -481,7 +481,7 @@ handle_db_errors
 
 ## Демонстрация декораторов и замыканий
 
-[![asciicast](https://asciinema.org/a/uNizV7vkgRhlJH0a.svg)](https://asciinema.org/a/uNizV7vkgRhlJH0a)
+[![asciicast](https://asciinema.org/a/gMKuBWuKoITViavX.svg)](https://asciinema.org/a/gMKuBWuKoITViavX)
 
 
 ### Подтверждение опасных операций
